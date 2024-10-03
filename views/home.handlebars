@@ -1,9 +1,15 @@
-{{> header}}
-<h1>Welcome to the Blog</h1>
-{{#each posts}}
-  <div>
-    <h2>{{this.title}}</h2>
-    <p>{{this.content}}</p>
-    <small>Created by {{this.username}} on {{this.createdAt}}</small>
-  </div>
-{{/each}}
+{{!-- views/home.handlebars --}}
+{{!-- Extends the main layout --}}
+{{#extend 'main'}}
+  <h1>Welcome to the Tech Blog</h1>
+
+  <section class="posts">
+    {{#each posts}}
+      <article>
+        <h2>{{this.title}}</h2>
+        <p>By {{this.user.username}} on {{this.createdAt}}</p>
+        <p>{{this.content}}</p>
+      </article>
+    {{/each}}
+  </section>
+{{/extend}}
