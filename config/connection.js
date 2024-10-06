@@ -7,7 +7,7 @@ const sequelize = new Sequelize(
   process.env.DB_PASSWORD,
   {
     host: 'localhost',
-    dialect: 'postgres',  // Assuming PostgreSQL
+    dialect: 'postgres',
     port: 5432
   }
 );
