@@ -33,3 +33,8 @@ router.delete('/:id', withAuth, async (req, res) => {
 });
 
 module.exports = router;
+
+
+
+// login router is missing
+// alos make all folders lowercase
