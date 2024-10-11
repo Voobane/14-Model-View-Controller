@@ -37,6 +37,10 @@ const sess = {
   }),
 };
 
+// Config handlebar layout
+const handlebarsLayouts = require('handlebars-layouts');
+handlebarsLayouts.register(hbs.handlebars);
+
 // Middleware for handling session
 app.use(session(sess));
 
