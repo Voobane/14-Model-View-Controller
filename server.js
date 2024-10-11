@@ -12,7 +12,19 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Set up Handlebars.js engine with custom helpers
-const hbs = exphbs.create({ helpers });
+const hbs = exphbs.create({
+  helpers: {
+    extend: function(name, context) {
+      if (!this._blocks) this._blocks = {};
+      if (!this._blocks[name]) this._blocks[name] = [];
+      this._blocks[name].push(context.fn(this));
+    },
+    block: function(name) {
+      const val = (this._blocks && this._blocks[name]) ? this._blocks[name].join('\n') : null;
+      return val || '';
+    }
+  }
+});
 
 // Configure session middleware
 const sess = {
