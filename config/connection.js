@@ -28,8 +28,8 @@ if (process.env.DB_URL) {
     process.env.DB_USER,
     process.env.DB_PW,
     {
-      host: 'localhost',
-      dialect: 'postgres',
+      host: 'localhost', //<<< correct?
+      dialect: 'postgres', 
     },
   );
 }
