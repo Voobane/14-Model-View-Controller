@@ -17,6 +17,7 @@
     "express": "^4.21.0",
     "express-handlebars": "^8.0.1",
     "express-session": "^1.18.0",
+    "handlebars-layouts": "^3.1.4",
     "pg": "^8.13.0",
     "sequelize": "^6.37.3"
   },

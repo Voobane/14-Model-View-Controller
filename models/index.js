@@ -1,5 +1,5 @@
-const User = require('./user');  // Correct path to User.js
-const Post = require('./post');  // Correct path to Post.js
+const User = require('./user');
+const Post = require('./post');
 
 // Associations (if any)
 User.hasMany(Post, {

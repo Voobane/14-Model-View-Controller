@@ -12,7 +12,19 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Set up Handlebars.js engine with custom helpers
-const hbs = exphbs.create({ helpers });
+const hbs = exphbs.create({
+  helpers: {
+    extend: function(name, context) {
+      if (!this._blocks) this._blocks = {};
+      if (!this._blocks[name]) this._blocks[name] = [];
+      this._blocks[name].push(context.fn(this));
+    },
+    block: function(name) {
+      const val = (this._blocks && this._blocks[name]) ? this._blocks[name].join('\n') : null;
+      return val || '';
+    }
+  }
+});
 
 // Configure session middleware
 const sess = {
@@ -24,6 +36,10 @@ const sess = {
     db: sequelize,
   }),
 };
+
+// Config handlebar layout
+const handlebarsLayouts = require('handlebars-layouts');
+handlebarsLayouts.register(hbs.handlebars);
 
 // Middleware for handling session
 app.use(session(sess));
@@ -46,3 +62,6 @@ app.use(routes);
 sequelize.sync({ force: false }).then(() => {
   app.listen(PORT, () => console.log('Now listening on port ' + PORT));
 });
+
+
+//fix ports on line 63 investine to make sure sintax is good

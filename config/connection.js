@@ -6,7 +6,7 @@
 //   process.env.DB_USER,
 //   process.env.DB_PASSWORD,
 //   {
-//     host: 'localhost',
+//     host: '127.0.0.1',
 //     dialect: 'postgres',
 //     port: 5432
 //   }
@@ -28,11 +28,9 @@ if (process.env.DB_URL) {
     process.env.DB_USER,
     process.env.DB_PW,
     {
-      host: 'p14',
+      host: 'localhost',
       dialect: 'postgres',
     },
   );
 }
 module.exports = sequelize;
-
-
