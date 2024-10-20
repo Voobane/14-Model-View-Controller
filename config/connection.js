@@ -19,6 +19,7 @@
 
 
 //-----------------------Render user only----------------------
+
 const Sequelize = require('sequelize');
 require('dotenv').config();
 
