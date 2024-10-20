@@ -1,3 +1,5 @@
+//-----------------------Local user only----------------------
+
 const Sequelize = require('sequelize');
 require('dotenv').config();
 
@@ -14,6 +16,11 @@ const sequelize = new Sequelize(
 
 module.exports = sequelize;
 
+
+
+
+
+//-----------------------Render user only----------------------
 
 // const Sequelize = require('sequelize');
 // require('dotenv').config();
