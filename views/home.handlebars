@@ -1,0 +1,13 @@
+{{#extend 'main'}}
+  <h1>Welcome to the Tech Blog</h1>
+
+  <section class="posts">
+    {{#each posts}}
+      <article>
+        <h2>{{this.title}}</h2>
+        <p>By {{this.user.username}} on {{this.createdAt}}</p>
+        <p>{{this.content}}</p>
+      </article>
+    {{/each}}
+  </section>
+{{/extend}}
