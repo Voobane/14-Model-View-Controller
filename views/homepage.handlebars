@@ -1,14 +1,27 @@
-<!-- views/homepage.handlebars -->
-<h1>Welcome to My Blog</h1>
+<h1>Welcome to the Tech Blog</h1>
 
-<div class="post-list">
-  {{#each posts}}
-    <div class="post">
-      <h2>{{this.title}}</h2>
-      <p>{{this.content}}</p>
-      <div class="post-meta">
-        <span>Posted by {{this.user.username}} on {{this.createdAt}}</span>
-      </div>
-    </div>
-  {{/each}}
-</div>
+{{#if logged_in}}
+  <p>Welcome back, {{username}}!</p>
+  <p><a href="/dashboard">Go to your dashboard</a></p>
+  <a href="/logout" id="logout">Logout</a>
+{{else}}
+  <p><a href="/login">Login</a> to manage your blog posts or <a href="/signup">Sign up</a> to start posting your thoughts!</p>
+{{/if}}
+
+<hr>
+
+<h2>Latest Blog Posts</h2>
+
+{{#each posts}}
+  <div class="post-item">
+    <h3><a href="/post/{{this.id}}">{{this.title}}</a></h3>
+    <p>Posted by {{this.user.username}} on {{this.createdAt}}</p>
+    <p>{{this.content}}</p>
+    <a href="/post/{{this.id}}">Read more & leave a comment</a>
+  </div>
+  <hr>
+{{else}}
+  <p>No blog posts have been created yet.</p>
+{{/each}}
+
+<script src="/js/logout.js"></script>
