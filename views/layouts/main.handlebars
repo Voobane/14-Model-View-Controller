@@ -1,3 +1,4 @@
+<!-- views/layouts/main.handlebars -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,23 +10,24 @@
 <body>
   <header>
     <nav>
-      <a href="/home">Home</a>
+      <a href="/">Home</a>
       {{#if logged_in}}
         <a href="/dashboard">Dashboard</a>
-        <a href="/logout">Logout</a> 
+        <a href="/logout">Logout</a>
       {{else}}
         <a href="/login">Login</a>
-        <a href="/signup">Sign Up</a>
       {{/if}}
     </nav>
   </header>
 
-  <main>
+  <div class="container">
     {{{body}}}
-  </main>
+  </div>
 
   <footer>
-    <p>&copy; 2024 Tech Blog</p>
+    <p>&copy; 2024 My Blog. All rights reserved.</p>
   </footer>
+
+  <script src="/js/app.js"></script>
 </body>
 </html>

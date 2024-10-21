@@ -1,63 +1,38 @@
-const path = require("path");
+// server.js
 const express = require("express");
 const session = require("express-session");
-const exphbs = require("express-handlebars");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const sequelize = require("./config/connection");
 const routes = require("./controllers");
+const exphbs = require("express-handlebars");
+const path = require("path");
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Set up Handlebars.js engine with custom helpers
-const hbs = exphbs.create({
-  helpers: {
-    extend: function (name, context) {
-      if (!this._blocks) this._blocks = {};
-      if (!this._blocks[name]) this._blocks[name] = [];
-      this._blocks[name].push(context.fn(this));
-    },
-    block: function (name) {
-      const val =
-        this._blocks && this._blocks[name]
-          ? this._blocks[name].join("\n")
-          : null;
-      return val || "";
-    },
-  },
-});
-
-// Configure session middleware
 const sess = {
-  secret: "Super secret secret",
-  cookie: {}, // You may want to configure security settings here for production
+  secret: process.env.SESSION_SECRET,
+  cookie: { maxAge: 1800000 }, // 30 minutes
   resave: false,
   saveUninitialized: true,
-  store: new SequelizeStore({
-    db: sequelize,
-  }),
+  store: new SequelizeStore({ db: sequelize }),
 };
 
-// Config handlebar layout
-const handlebarsLayouts = require("handlebars-layouts");
-handlebarsLayouts.register(hbs.handlebars);
-
-// Middleware for handling session
 app.use(session(sess));
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
-
-// Set up Handlebars as the view engine
-app.engine("handlebars", hbs.engine);
+// Set up Handlebars.js engine
+app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
 
-// Use the routes
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use(routes);
 
-// Sync Sequelize models to the database and start the server
 sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () => console.log("Now listening on port " + PORT));
+  app.listen(PORT, () =>
+    console.log(`Server running on http://localhost:${PORT}`)
+  );
 });

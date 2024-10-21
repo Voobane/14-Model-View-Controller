@@ -1,0 +1,14 @@
+<!-- views/homepage.handlebars -->
+<h1>Welcome to My Blog</h1>
+
+<div class="post-list">
+  {{#each posts}}
+    <div class="post">
+      <h2>{{this.title}}</h2>
+      <p>{{this.content}}</p>
+      <div class="post-meta">
+        <span>Posted by {{this.user.username}} on {{this.createdAt}}</span>
+      </div>
+    </div>
+  {{/each}}
+</div>
