@@ -27,8 +27,9 @@ if (process.env.DB_URL) {
     process.env.DB_USER,
     process.env.DB_PW,
     {
-      host: "localhost",
+      host: DB_HOST, //<<< was localhost
       dialect: "postgres",
+      port: 5432, //<<< delet if not worked
     }
   );
 }
