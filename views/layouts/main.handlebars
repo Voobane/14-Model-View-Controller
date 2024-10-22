@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{title}}</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="../../public/css/style.css">
 </head>
 <body>
   <header>
     <nav>
       <a href="/">Home</a>
       {{#if logged_in}}
-        <a href="/dashboard">Dashboard</a>
-        <a href="/logout">Logout</a> 
+        <a href="./main.handlebars">Dashboard</a>
+        <a href="../logout.handlebars">Logout</a> 
       {{else}}
-        <a href="/login">Login</a>
-        <a href="/signup">Sign Up</a>
+        <a href="../login.handlebars">Login</a>
+        <a href="../signup.handlebars">Sign Up</a>
       {{/if}}
     </nav>
   </header>
