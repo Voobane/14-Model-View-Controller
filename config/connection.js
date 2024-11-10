@@ -4,7 +4,7 @@ require("dotenv").config();
 let sequelize;
 
 if (process.env.DATABASE_URL) {
-  // Production config (Render)
+  // Production configuration (Render)
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: "postgres",
     protocol: "postgres",
@@ -17,7 +17,7 @@ if (process.env.DATABASE_URL) {
     logging: false,
   });
 } else {
-  // Development config (local)
+  // Local development configuration
   sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
@@ -26,9 +26,18 @@ if (process.env.DATABASE_URL) {
       host: "127.0.0.1",
       dialect: "postgres",
       port: 5432,
-      logging: console.log,
     }
   );
 }
+
+// Test the connection
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Database connection established successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
 
 module.exports = sequelize;

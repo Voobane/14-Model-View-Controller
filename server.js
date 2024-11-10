@@ -11,6 +11,11 @@ const routes = require("./controllers");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Add near your other routes
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 // Set up Handlebars.js engine with custom helpers
 const hbs = exphbs.create({ helpers });
 
