@@ -34,10 +34,15 @@ router.get("/", withAuth, async (req, res) => {
 
 // GET /dashboard/new - New post form
 router.get("/new", withAuth, (req, res) => {
-  res.render("new-post", {
-    logged_in: true,
-    username: req.session.username,
-  });
+  try {
+    res.render("new-post", {
+      logged_in: true,
+      username: req.session.username,
+    });
+  } catch (err) {
+    console.error("Error loading new post form:", err);
+    res.status(500).render("error", { error: "Failed to load new post form" });
+  }
 });
 
 // GET /dashboard/edit/:id - Edit post form
@@ -46,7 +51,10 @@ router.get("/edit/:id", withAuth, async (req, res) => {
     const postData = await Post.findByPk(req.params.id);
 
     if (!postData) {
-      res.status(404).render("404", { message: "Post not found" });
+      res.status(404).render("404", {
+        message: "Post not found",
+        logged_in: req.session.logged_in,
+      });
       return;
     }
 
