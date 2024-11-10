@@ -5,6 +5,22 @@
       <span class="icon">+</span> Create New Post
     </a>
   </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="../public/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <a href="./dashboard.handlebars" class="active">Dashboard</a>
+      <a href="./logout.handlebars">Logout</a>
+    </nav>
+  </header>
 
   {{#if posts.length}}
     <section class="posts">
@@ -54,3 +70,6 @@
 </div>
 
 <script src="/js/dashboard.js"></script>
+  <script src="../public/js/dashboard.js"></script>
+</body>
+</html>
