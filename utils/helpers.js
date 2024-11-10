@@ -10,6 +10,20 @@ module.exports = {
     });
   },
 
+  // Format date for datetime attribute
+  format_datetime: (date) => {
+    if (!date) return "";
+    return new Date(date).toISOString();
+  },
+
+  // Create excerpt from longer text
+  create_excerpt: (text, length = 150) => {
+    if (!text) return "";
+    text = text.replace(/(<([^>]+)>)/gi, ""); // Remove HTML tags
+    if (text.length <= length) return text;
+    return text.substr(0, length).trim() + "...";
+  },
+
   // Format relative time (e.g., "2 hours ago")
   format_relative_time: (date) => {
     if (!date) return "";
@@ -26,16 +40,6 @@ module.exports = {
     return `${Math.floor(diff / 31536000)} years ago`;
   },
 
-  // Format year (for copyright)
-  format_year: () => {
-    return new Date().getFullYear();
-  },
-
-  // Check if values are equal
-  equals: (a, b) => {
-    return a === b;
-  },
-
   // Format username (capitalize first letter)
   format_username: (username) => {
     if (!username) return "";
@@ -47,8 +51,24 @@ module.exports = {
     return count === 1 ? singular : plural;
   },
 
-  // Check if user is owner of content
+  // Check if values are equal
+  equals: (a, b) => {
+    return a === b;
+  },
+
+  // Check if user is owner
   is_owner: (contentUserId, sessionUserId) => {
     return contentUserId === sessionUserId;
+  },
+
+  // Get current year
+  get_year: () => {
+    return new Date().getFullYear();
+  },
+
+  // Format number (e.g., for view counts)
+  format_number: (number) => {
+    if (!number) return "0";
+    return new Intl.NumberFormat("en-US").format(number);
   },
 };

@@ -3,79 +3,41 @@ const express = require("express");
 const session = require("express-session");
 const exphbs = require("express-handlebars");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
+
 const sequelize = require("./config/connection");
-const routes = require("./controllers");
 const helpers = require("./utils/helpers");
+const routes = require("./controllers");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Set up Handlebars.js engine with custom helpers
-const hbs = exphbs.create({
-  helpers,
-  defaultLayout: "main",
-  partialsDir: path.join(__dirname, "views/partials"),
-});
+const hbs = exphbs.create({ helpers });
 
 // Configure session middleware
 const sess = {
-  secret: process.env.SESSION_SECRET || "Super secret secret",
-  cookie: {
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  },
+  secret: "Super secret secret",
+  cookie: { maxAge: 24 * 60 * 60 * 1000 }, // 24 hours
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   store: new SequelizeStore({
     db: sequelize,
   }),
 };
 
-// Security middleware
 app.use(session(sess));
 
-// Body parsing middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Static files middleware
-app.use(express.static(path.join(__dirname, "public")));
-
-// Template engine setup
+// Inform Express.js on which template engine to use
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
+app.set("views", path.join(__dirname, "views"));
 
-// Custom middleware for user state
-app.use((req, res, next) => {
-  res.locals.logged_in = req.session.logged_in;
-  res.locals.user_id = req.session.user_id;
-  next();
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).render("error", {
-    message: "Something broke!",
-    error: process.env.NODE_ENV === "development" ? err : {},
-  });
-});
-
-// Routes
 app.use(routes);
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).render("404", {
-    message: "Page not found",
-  });
-});
-
-// Database sync and server start
 sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+  app.listen(PORT, () => console.log(`Now listening on port ${PORT}`));
 });

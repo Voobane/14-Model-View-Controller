@@ -7,19 +7,11 @@ router.get("/", withAuth, async (req, res) => {
   try {
     const postData = await Post.findAll({
       where: { user_id: req.session.user_id },
-      include: [
-        {
-          model: Comment,
-          attributes: ["id"],
-        },
-      ],
+      include: [{ model: Comment }],
       order: [["created_at", "DESC"]],
     });
 
-    const posts = postData.map((post) => ({
-      ...post.get({ plain: true }),
-      commentCount: post.comments.length,
-    }));
+    const posts = postData.map((post) => post.get({ plain: true }));
 
     res.render("dashboard", {
       posts,
@@ -27,53 +19,16 @@ router.get("/", withAuth, async (req, res) => {
       username: req.session.username,
     });
   } catch (err) {
-    console.error("Error loading dashboard:", err);
-    res.status(500).render("error", { error: "Failed to load dashboard" });
+    res.status(500).json(err);
   }
 });
 
 // GET /dashboard/new - New post form
 router.get("/new", withAuth, (req, res) => {
-  try {
-    res.render("new-post", {
-      logged_in: true,
-      username: req.session.username,
-    });
-  } catch (err) {
-    console.error("Error loading new post form:", err);
-    res.status(500).render("error", { error: "Failed to load new post form" });
-  }
-});
-
-// GET /dashboard/edit/:id - Edit post form
-router.get("/edit/:id", withAuth, async (req, res) => {
-  try {
-    const postData = await Post.findByPk(req.params.id);
-
-    if (!postData) {
-      res.status(404).render("404", {
-        message: "Post not found",
-        logged_in: req.session.logged_in,
-      });
-      return;
-    }
-
-    const post = postData.get({ plain: true });
-
-    if (post.user_id !== req.session.user_id) {
-      res.redirect("/dashboard");
-      return;
-    }
-
-    res.render("edit-post", {
-      post,
-      logged_in: true,
-      username: req.session.username,
-    });
-  } catch (err) {
-    console.error("Error loading edit form:", err);
-    res.status(500).render("error", { error: "Failed to load edit form" });
-  }
+  res.render("new-post", {
+    logged_in: true,
+    username: req.session.username,
+  });
 });
 
 module.exports = router;

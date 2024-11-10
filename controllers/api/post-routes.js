@@ -66,27 +66,29 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST /api/posts - Create new post
+// Create new post
 router.post("/", withAuth, async (req, res) => {
   try {
-    const { title, content, status = "published" } = req.body;
+    const { title, content } = req.body;
 
     // Validate input
     if (!title || !content) {
-      res.status(400).json({ message: "Please provide title and content" });
+      res
+        .status(400)
+        .json({ message: "Please provide both title and content" });
       return;
     }
 
     const newPost = await Post.create({
       title,
       content,
-      status,
       user_id: req.session.user_id,
     });
 
     res.status(201).json(newPost);
   } catch (err) {
     console.error("Error creating post:", err);
-    res.status(500).json(err);
+    res.status(500).json({ message: "Failed to create post" });
   }
 });
 

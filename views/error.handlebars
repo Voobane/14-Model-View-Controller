@@ -1,0 +1,13 @@
+<div class="error-container">
+    <h1 class="error-title">Oops! Something Went Wrong</h1>
+    <div class="error-content">
+      <p>{{error}}</p>
+      <p>Please try again later or contact support if the problem persists.</p>
+    </div>
+    <div class="error-actions">
+      <a href="/" class="btn btn-primary">Return to Homepage</a>
+      {{#if logged_in}}
+        <a href="/dashboard" class="btn btn-secondary">Go to Dashboard</a>
+      {{/if}}
+    </div>
+  </div>
