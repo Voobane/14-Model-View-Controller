@@ -2,7 +2,7 @@
 
 GitHub Repo link: https://github.com/Voobane/14-Model-View-Controller
 
-Depployed With Render link: https://one4-model-view-controller.onrender.com
+Deployed With Render link: https://one4-model-view-controller.onrender.com
 
 ## Your Task
 
