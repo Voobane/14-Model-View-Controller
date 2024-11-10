@@ -1,10 +1,10 @@
 <div class="form-container wide">
   <div class="form-header">
-    <h1 class="page-title">Create New Post</h1>
+    <h1 class="page-title">Edit Post</h1>
     <a href="/dashboard" class="btn btn-link">← Back to Dashboard</a>
   </div>
 
-  <form id="new-post-form" class="post-form">
+  <form id="edit-post-form" class="post-form" data-id="{{post.id}}">
     <div class="form-group">
       <label for="post-title">Title:</label>
       <input 
@@ -14,7 +14,7 @@
         class="form-input"
         required 
         maxlength="255"
-        placeholder="Enter your post title">
+        value="{{post.title}}">
     </div>
 
     <div class="form-group">
@@ -24,23 +24,31 @@
         name="content" 
         class="form-input form-textarea"
         required
-        rows="10"
-        placeholder="Write your post content here..."></textarea>
+        rows="10">{{post.content}}</textarea>
     </div>
 
     <div class="form-group">
       <label for="post-status">Status:</label>
       <select id="post-status" name="status" class="form-input">
-        <option value="published">Published</option>
-        <option value="draft">Draft</option>
+        <option value="published" {{#if (equals post.status "published")}}selected{{/if}}>Published</option>
+        <option value="draft" {{#if (equals post.status "draft")}}selected{{/if}}>Draft</option>
       </select>
     </div>
 
+    <div class="post-stats">
+      <p>Created: {{format_relative_time post.created_at}}</p>
+      {{#if post.last_edited_at}}
+        <p>Last edited: {{format_relative_time post.last_edited_at}}</p>
+      {{/if}}
+      <p>Views: {{post.view_count}}</p>
+    </div>
+
     <div class="form-actions">
-      <button type="submit" class="btn btn-primary">Create Post</button>
+      <button type="submit" class="btn btn-primary">Update Post</button>
+      <button type="button" class="btn btn-danger delete-post" data-id="{{post.id}}">Delete Post</button>
       <button type="button" class="btn btn-secondary" onclick="window.location.href='/dashboard'">Cancel</button>
     </div>
   </form>
 </div>
 
-<script src="/js/new-post.js"></script>
+<script src="/js/edit-post.js"></script>
