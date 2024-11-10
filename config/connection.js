@@ -1,39 +1,44 @@
-//__________________________For local user only___________________________________
-
 const Sequelize = require("sequelize");
 require("dotenv").config();
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: "127.0.0.1",
-    dialect: "postgres",
-    port: 5432,
-  }
-);
+let sequelize;
+
+// Check if running on Render (which provides DATABASE_URL)
+if (process.env.DATABASE_URL) {
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
+  });
+} else {
+  // Local development configuration
+  sequelize = new Sequelize(
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD,
+    {
+      host: "127.0.0.1",
+      dialect: "postgres",
+      port: 5432,
+      logging: console.log,
+      dialectOptions: {
+        // Your local config options
+      },
+    }
+  );
+}
+
+// Test the connection
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Database connection established successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
 
 module.exports = sequelize;
-
-//__________________________For Render user only___________________________________
-
-// const Sequelize = require('sequelize');
-// require('dotenv').config();
-
-// let sequelize;
-
-// if (process.env.DB_URL) {
-//   sequelize = new Sequelize(process.env.DB_URL);
-// } else {
-//   sequelize = new Sequelize(
-//     process.env.DB_NAME,
-//     process.env.DB_USER,
-//     process.env.DB_PW,
-//     {
-//       host: 'localhost', //<<< correct?
-//       dialect: 'postgres',
-//     },
-//   );
-// }
-// module.exports = sequelize;
