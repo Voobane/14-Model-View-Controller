@@ -1,13 +1,55 @@
-{{#extend 'main'}}
-  <h1>Welcome to the Tech Blog</h1>
+<div class="home">
+  <h1 class="page-title">Recent Posts</h1>
 
   <section class="posts">
-    {{#each posts}}
-      <article>
-        <h2>{{this.title}}</h2>
-        <p>By {{this.user.username}} on {{this.createdAt}}</p>
-        <p>{{this.content}}</p>
-      </article>
-    {{/each}}
+    {{#if posts.length}}
+      {{#each posts as |post|}}
+        <article class="post-card">
+          <div class="post-header">
+            <h2 class="post-title">
+              <a href="/post/{{post.id}}">{{post.title}}</a>
+            </h2>
+            <div class="post-meta">
+              Posted by {{format_username post.author.username}}
+              <span title="{{format_datetime post.created_at}}">
+                {{format_relative_time post.created_at}}
+              </span>
+              {{#if post.last_edited_at}}
+                (edited {{format_relative_time post.last_edited_at}})
+              {{/if}}
+            </div>
+          </div>
+          
+          <div class="post-content">
+            {{create_excerpt post.content}}
+          </div>
+          
+          <div class="post-footer">
+            <div class="post-stats">
+              <span class="view-count">{{post.view_count}} views</span>
+              <span class="comment-count">
+                {{post.commentCount}} 
+                {{pluralize post.commentCount "comment" "comments"}}
+              </span>
+            </div>
+            <a href="/post/{{post.id}}" class="btn btn-primary">Read More</a>
+          </div>
+        </article>
+      {{/each}}
+    {{else}}
+      <div class="empty-state">
+        <h2>Welcome to Tech Blog!</h2>
+        <p>There aren't any posts yet.</p>
+        {{#if logged_in}}
+          <a href="/dashboard/new" class="btn btn-primary">Create the First Post</a>
+        {{else}}
+          <p>
+            <a href="/login" class="btn btn-primary">Login</a> or 
+            <a href="/signup" class="btn btn-secondary">Sign Up</a> 
+            to start posting!
+          </p>
+        {{/if}}
+      </div>
+    {{/if}}
   </section>
-{{/extend}}
+</div>

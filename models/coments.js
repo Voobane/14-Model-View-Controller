@@ -1,14 +1,14 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/connection");
 
-class Post extends Model {
+class Comment extends Model {
   // Method to check if user is owner
   isOwner(userId) {
     return this.user_id === userId;
   }
 }
 
-Post.init(
+Comment.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -16,18 +16,11 @@ Post.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: [1, 255],
-        notEmpty: true,
-      },
-    },
     content: {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
+        len: [1, 1000],
         notEmpty: true,
       },
     },
@@ -39,31 +32,31 @@ Post.init(
       },
       onDelete: "CASCADE",
     },
-    status: {
-      type: DataTypes.ENUM("draft", "published"),
-      defaultValue: "published",
-    },
-    view_count: {
+    post_id: {
       type: DataTypes.INTEGER,
-      defaultValue: 0,
+      references: {
+        model: "post",
+        key: "id",
+      },
+      onDelete: "CASCADE",
     },
-    last_edited_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
+    edited: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {
     hooks: {
-      beforeUpdate: async (post) => {
-        post.last_edited_at = new Date();
+      beforeUpdate: async (comment) => {
+        comment.edited = true;
       },
     },
     sequelize,
     timestamps: true,
     freezeTableName: true,
     underscored: true,
-    modelName: "post",
+    modelName: "comment",
   }
 );
 
-module.exports = Post;
+module.exports = Comment;

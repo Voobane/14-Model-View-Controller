@@ -3,29 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{title}}</title>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{{title}} | Tech Blog</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
+<body class="flex flex-col min-h-screen">
   <header>
     <nav>
-      <a href="/">Home</a>
-      {{#if logged_in}}
-        <a href="/dashboard">Dashboard</a>
-        <a href="/logout">Logout</a> 
-      {{else}}
-        <a href="/login">Login</a>
-        <a href="/signup">Sign Up</a>
-      {{/if}}
+      <div class="nav-left">
+        <a href="/" class="{{#if isHome}}active{{/if}}">Home</a>
+        {{#if logged_in}}
+          <a href="/dashboard" class="{{#if isDashboard}}active{{/if}}">Dashboard</a>
+        {{/if}}
+      </div>
+      <div class="nav-right">
+        {{#if logged_in}}
+          <span class="welcome-text">Welcome, {{username}}!</span>
+          <button id="logout" class="btn btn-link">Logout</button>
+        {{else}}
+          <a href="/login" class="{{#if isLogin}}active{{/if}}">Login</a>
+          <a href="/signup" class="{{#if isSignup}}active{{/if}}">Sign Up</a>
+        {{/if}}
+      </div>
     </nav>
   </header>
 
-  <main>
+  <main class="container flex-grow">
+    {{#if error}}
+      <div class="alert alert-danger">
+        <p>{{error}}</p>
+      </div>
+    {{/if}}
+
+    {{#if success}}
+      <div class="alert alert-success">
+        <p>{{success}}</p>
+      </div>
+    {{/if}}
+
     {{{body}}}
   </main>
 
   <footer>
-    <p>&copy; 2024 Tech Blog</p>
+    <div class="container">
+      <p>&copy; {{format_date "YYYY"}} Tech Blog. All rights reserved.</p>
+    </div>
   </footer>
+
+  {{#if logged_in}}
+    <script src="/js/logout.js"></script>
+  {{/if}}
 </body>
 </html>

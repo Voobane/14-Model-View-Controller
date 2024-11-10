@@ -1,44 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-  <header>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/dashboard" class="active">Dashboard</a>
-      <a href="/logout">Logout</a>
-    </nav>
-  </header>
+<div class="dashboard">
+  <div class="dashboard-header">
+    <h1 class="page-title">My Dashboard</h1>
+    <a href="/dashboard/new" class="btn btn-primary">
+      <span class="icon">+</span> Create New Post
+    </a>
+  </div>
 
-  <main>
-    <h1>Your Posts</h1>
-    <button id="create-new-post">Create New Post</button>
-
+  {{#if posts.length}}
     <section class="posts">
-      {{#if posts.length}}
-        {{#each posts}}
-          <div class="post">
-            <h2>{{this.title}}</h2>
-            <p>Posted on: {{this.createdAt}}</p>
-            <button class="edit-post" data-id="{{this.id}}">Edit</button>
-            <button class="delete-post" data-id="{{this.id}}">Delete</button>
+      {{#each posts as |post|}}
+        <article class="post-card">
+          <div class="post-header">
+            <div class="post-title-area">
+              <h2 class="post-title">{{post.title}}</h2>
+              <span class="post-status {{post.status}}">{{post.status}}</span>
+            </div>
+            <div class="post-meta">
+              Posted {{format_relative_time post.created_at}}
+              {{#if post.last_edited_at}}
+                (edited {{format_relative_time post.last_edited_at}})
+              {{/if}}
+            </div>
           </div>
-        {{/each}}
-      {{else}}
-        <p>No posts yet. Create a new one!</p>
-      {{/if}}
+          
+          <div class="post-content">
+            {{create_excerpt post.content}}
+          </div>
+          
+          <div class="post-footer">
+            <div class="post-stats">
+              <span class="view-count">{{post.view_count}} views</span>
+              <span class="comment-count">
+                {{post.commentCount}} 
+                {{pluralize post.commentCount "comment" "comments"}}
+              </span>
+            </div>
+            <div class="post-actions">
+              <a href="/post/{{post.id}}" class="btn btn-secondary">View</a>
+              <a href="/dashboard/edit/{{post.id}}" class="btn btn-primary">Edit</a>
+              <button class="btn btn-danger delete-post" data-id="{{post.id}}">Delete</button>
+            </div>
+          </div>
+        </article>
+      {{/each}}
     </section>
-  </main>
+  {{else}}
+    <div class="empty-state">
+      <h2>Welcome to your dashboard!</h2>
+      <p>You haven't written any blog posts yet.</p>
+      <a href="/dashboard/new" class="btn btn-primary">Create Your First Post</a>
+    </div>
+  {{/if}}
+</div>
 
-  <footer>
-    <p>&copy; 2024 Tech Blog</p>
-  </footer>
-
-  <script src="/js/dashboard.js"></script>
-</body>
-</html>
+<script src="/js/dashboard.js"></script>

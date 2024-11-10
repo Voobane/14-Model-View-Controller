@@ -1,0 +1,91 @@
+<div class="single-post">
+  <article class="post-full">
+    <div class="post-header">
+      <h1 class="post-title">{{post.title}}</h1>
+      <div class="post-meta">
+        Posted by {{format_username post.author.username}}
+        <span title="{{format_datetime post.created_at}}">
+          {{format_relative_time post.created_at}}
+        </span>
+        {{#if post.last_edited_at}}
+          (edited {{format_relative_time post.last_edited_at}})
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="post-content">
+      {{post.content}}
+    </div>
+
+    <div class="post-footer">
+      <div class="post-stats">
+        <span class="view-count">{{post.view_count}} views</span>
+        <span class="comment-count">
+          {{post.comments.length}} 
+          {{pluralize post.comments.length "comment" "comments"}}
+        </span>
+      </div>
+      {{#if is_owner}}
+        <div class="post-actions">
+          <a href="/dashboard/edit/{{post.id}}" class="btn btn-primary">Edit Post</a>
+          <button class="btn btn-danger delete-post" data-id="{{post.id}}">Delete Post</button>
+        </div>
+      {{/if}}
+    </div>
+  </article>
+
+  <section class="comments">
+    <h2>Comments</h2>
+    
+    {{#if logged_in}}
+      <form id="comment-form" class="comment-form" data-post-id="{{post.id}}">
+        <div class="form-group">
+          <label for="comment-content">Add a comment:</label>
+          <textarea 
+            id="comment-content" 
+            name="content" 
+            class="form-input"
+            required
+            rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Comment</button>
+      </form>
+    {{else}}
+      <p class="login-prompt">
+        <a href="/login">Login</a> or <a href="/signup">sign up</a> to leave a comment.
+      </p>
+    {{/if}}
+
+    <div class="comment-list">
+      {{#if post.comments.length}}
+        {{#each post.comments}}
+          <div class="comment" data-comment-id="{{id}}">
+            <div class="comment-meta">
+              <span class="comment-author">{{format_username author.username}}</span>
+              <span class="comment-date" title="{{format_datetime created_at}}">
+                {{format_relative_time created_at}}
+              </span>
+              {{#if edited}}
+                <span class="comment-edited">(edited)</span>
+              {{/if}}
+            </div>
+            <div class="comment-content">{{content}}</div>
+            {{#if (is_owner user_id ../user_id)}}
+              <div class="comment-actions">
+                <button class="btn btn-link edit-comment">Edit</button>
+                <button class="btn btn-link delete-comment">Delete</button>
+              </div>
+            {{/if}}
+          </div>
+        {{/each}}
+      {{else}}
+        <p class="no-comments">No comments yet. Be the first to comment!</p>
+      {{/if}}
+    </div>
+  </section>
+</div>
+
+<script src="/js/comments.js"></script>
+{{#if is_owner}}
+<script src="/js/post-management.js"></script>
+{{/if}}
