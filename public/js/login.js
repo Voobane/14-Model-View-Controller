@@ -1,7 +1,6 @@
 const loginFormHandler = async (event) => {
   event.preventDefault();
 
-  // Get the values from the form
   const username = document.querySelector("#username-login").value.trim();
   const password = document.querySelector("#password-login").value.trim();
 
@@ -17,13 +16,11 @@ const loginFormHandler = async (event) => {
         document.location.replace("/dashboard");
       } else {
         const data = await response.json();
-        alert(data.message || "Failed to log in");
+        alert(data.message || "Failed to log in.");
       }
     } catch (err) {
-      alert("Failed to log in");
+      alert("Failed to log in. Please try again.");
     }
-  } else {
-    alert("Please provide both username and password");
   }
 };
 

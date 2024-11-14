@@ -68,6 +68,34 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /login - Login page
+router.get("/login", (req, res) => {
+  // Redirect to dashboard if already logged in
+  if (req.session.logged_in) {
+    res.redirect("/dashboard");
+    return;
+  }
+
+  res.render("login", {
+    title: "Login",
+    logged_in: false,
+  });
+});
+
+// GET /signup - Signup page
+router.get("/signup", (req, res) => {
+  // Redirect to dashboard if already logged in
+  if (req.session.logged_in) {
+    res.redirect("/dashboard");
+    return;
+  }
+
+  res.render("signup", {
+    title: "Sign Up",
+    logged_in: false,
+  });
+});
+
 // GET /post/:id - Single post view with view count tracking
 router.get("/post/:id", async (req, res) => {
   try {
@@ -117,6 +145,17 @@ router.get("/post/:id", async (req, res) => {
   } catch (err) {
     console.error("Error loading post:", err);
     res.status(500).render("error", { error: "Failed to load post" });
+  }
+});
+
+// GET /logout - Logout and redirect to home
+router.get("/logout", (req, res) => {
+  if (req.session.logged_in) {
+    req.session.destroy(() => {
+      res.redirect("/");
+    });
+  } else {
+    res.redirect("/");
   }
 });
 
