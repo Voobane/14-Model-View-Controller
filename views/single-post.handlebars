@@ -3,60 +3,98 @@
     <div class="post-header">
       <h2 class="post-title">{{post.title}}</h2>
       <div class="post-meta">
-        Posted by {{post.user.username}} on {{format_date post.created_at}}
+        Posted by {{format_username post.author.username}}
+        <span title="{{format_datetime post.created_at}}">
+          {{format_relative_time post.created_at}}
+        </span>
+        {{#if post.last_edited_at}}
+          (edited {{format_relative_time post.last_edited_at}})
+        {{/if}}
       </div>
     </div>
 
     <div class="post-content">
       <p>{{post.content}}</p>
     </div>
+
+    <div class="post-footer">
+      <div class="post-stats">
+        <span class="view-count">{{post.view_count}} views</span>
+        <span class="comment-count">
+          {{post.comments.length}} 
+          {{pluralize post.comments.length "comment" "comments"}}
+        </span>
+      </div>
+      {{#if is_owner}}
+        <div class="post-actions">
+          <a href="/dashboard/edit/{{post.id}}" class="btn btn-primary">Edit Post</a>
+          <button class="btn btn-danger delete-post" data-id="{{post.id}}">Delete Post</button>
+        </div>
+      {{/if}}
+    </div>
   </article>
 
-  {{#if logged_in}}
-    <div class="comment-form-container">
-      <h3>Add a Comment</h3>
-      <form id="comment-form" data-post-id="{{post.id}}">
-        <div class="form-group">
-          <textarea 
-            id="comment-content" 
-            name="content" 
-            class="form-input"
-            rows="3"
-            placeholder="What are your thoughts?"
-            required
-          ></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit Comment</button>
-      </form>
-    </div>
-  {{else}}
-    <p class="login-prompt">Please <a href="/login">login</a> to leave a comment.</p>
-  {{/if}}
-
-  <section class="comments">
-    <h3>Comments</h3>
-    {{#if post.comments.length}}
-      {{#each post.comments as |comment|}}
-        <div class="comment">
-          <div class="comment-meta">
-            <span class="comment-author">{{comment.user.username}}</span>
-            <span class="comment-date">{{format_date comment.created_at}}</span>
+  <section class="comments-section">
+    {{#if logged_in}}
+      <div class="comment-form-container">
+        <h3>Add a Comment</h3>
+        <form id="comment-form" data-post-id="{{post.id}}">
+          <div class="form-group">
+            <textarea 
+              id="comment-content" 
+              name="content" 
+              class="form-input"
+              rows="3"
+              placeholder="Share your thoughts..."
+              required
+            ></textarea>
           </div>
-          <p class="comment-content">{{comment.content}}</p>
-          {{#if (is_owner comment.user_id ../user_id)}}
-            <div class="comment-actions">
-              <button class="btn btn-sm btn-danger delete-comment" data-id="{{comment.id}}">Delete</button>
-            </div>
-          {{/if}}
-        </div>
-      {{/each}}
+          <button type="submit" class="btn btn-primary">Submit Comment</button>
+        </form>
+      </div>
     {{else}}
-      <p class="no-comments">No comments yet. Be the first to comment!</p>
+      <p class="login-prompt">
+        <a href="/login" class="btn btn-primary">Login</a> or 
+        <a href="/signup" class="btn btn-secondary">Sign up</a> 
+        to join the discussion!
+      </p>
     {{/if}}
+
+    <div class="comments-list">
+      <h3>Comments ({{post.comments.length}})</h3>
+      {{#if post.comments.length}}
+        {{#each post.comments as |comment|}}
+          <div class="comment" id="comment-{{comment.id}}">
+            <div class="comment-meta">
+              <span class="comment-author">{{format_username comment.author.username}}</span>
+              <span class="comment-date" title="{{format_datetime comment.created_at}}">
+                {{format_relative_time comment.created_at}}
+              </span>
+              {{#if comment.edited}}
+                <span class="comment-edited">(edited)</span>
+              {{/if}}
+            </div>
+            <div class="comment-content">
+              {{comment.content}}
+            </div>
+            {{#if (is_owner comment.user_id ../user_id)}}
+              <div class="comment-actions">
+                <button class="btn btn-sm btn-secondary edit-comment" data-id="{{comment.id}}">Edit</button>
+                <button class="btn btn-sm btn-danger delete-comment" data-id="{{comment.id}}">Delete</button>
+              </div>
+            {{/if}}
+          </div>
+        {{/each}}
+      {{else}}
+        <p class="no-comments">Be the first to share your thoughts!</p>
+      {{/if}}
+    </div>
   </section>
 </div>
 
-<script src="/js/comments.js"></script>
 {{#if logged_in}}
   <script src="/js/comment-handler.js"></script>
+  {{#if is_owner}}
+    <script src="/js/post-handler.js"></script>
+  {{/if}}
 {{/if}}

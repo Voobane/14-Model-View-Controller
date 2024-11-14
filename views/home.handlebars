@@ -1,5 +1,10 @@
 <div class="home">
-  <h1 class="page-title">Recent Posts</h1>
+  <div class="page-header">
+    <h1 class="page-title">Recent Posts</h1>
+    {{#if logged_in}}
+      <a href="/dashboard/new" class="btn btn-primary">Create New Post</a>
+    {{/if}}
+  </div>
 
   <section class="posts">
     {{#if posts.length}}
@@ -10,12 +15,16 @@
               <a href="/post/{{post.id}}">{{post.title}}</a>
             </h2>
             <div class="post-meta">
-              Posted by {{format_username post.author.username}}
-              <span title="{{format_datetime post.created_at}}">
+              <span class="post-author">
+                By {{format_username post.author.username}}
+              </span>
+              <span class="post-date" title="{{format_datetime post.created_at}}">
                 {{format_relative_time post.created_at}}
               </span>
               {{#if post.last_edited_at}}
-                (edited {{format_relative_time post.last_edited_at}})
+                <span class="post-edited" title="{{format_datetime post.last_edited_at}}">
+                  (edited {{format_relative_time post.last_edited_at}})
+                </span>
               {{/if}}
             </div>
           </div>
@@ -26,8 +35,12 @@
           
           <div class="post-footer">
             <div class="post-stats">
-              <span class="view-count">{{post.view_count}} views</span>
-              <span class="comment-count">
+              <span class="view-count" title="Views">
+                <i class="icon icon-eye"></i>
+                {{post.view_count}}
+              </span>
+              <span class="comment-count" title="Comments">
+                <i class="icon icon-comment"></i>
                 {{post.commentCount}} 
                 {{pluralize post.commentCount "comment" "comments"}}
               </span>
@@ -36,18 +49,33 @@
           </div>
         </article>
       {{/each}}
+
+      {{!-- Add pagination if needed --}}
+      {{#if pagination}}
+        <div class="pagination">
+          {{#if pagination.prev}}
+            <a href="?page={{pagination.prev}}" class="btn btn-secondary">Previous</a>
+          {{/if}}
+          <span class="page-info">Page {{pagination.current}} of {{pagination.total}}</span>
+          {{#if pagination.next}}
+            <a href="?page={{pagination.next}}" class="btn btn-secondary">Next</a>
+          {{/if}}
+        </div>
+      {{/if}}
+
     {{else}}
       <div class="empty-state">
         <h2>Welcome to Tech Blog!</h2>
-        <p>There aren't any posts yet.</p>
+        <p>Share your thoughts, knowledge, and experiences with the tech community.</p>
         {{#if logged_in}}
           <a href="/dashboard/new" class="btn btn-primary">Create the First Post</a>
         {{else}}
-          <p>
-            <a href="/login" class="btn btn-primary">Login</a> or 
-            <a href="/signup" class="btn btn-secondary">Sign Up</a> 
-            to start posting!
-          </p>
+          <div class="auth-buttons">
+            <a href="/login" class="btn btn-primary">Login</a>
+            <span class="or-divider">or</span>
+            <a href="/signup" class="btn btn-secondary">Sign Up</a>
+            <p class="auth-prompt">to start posting!</p>
+          </div>
         {{/if}}
       </div>
     {{/if}}
