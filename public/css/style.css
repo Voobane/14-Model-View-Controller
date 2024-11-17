@@ -273,7 +273,7 @@ textarea.form-input {
 .login-prompt {
   text-align: center;
   padding: 1rem;
-  background: white;
+  background: #404040;
   border-radius: 8px;
   margin: 1rem 0;
   box-shadow: var(--card-shadow);
@@ -534,3 +534,4 @@ textarea.form-input {
   font-style: italic;
   color: var(--light-text);
 }
+
