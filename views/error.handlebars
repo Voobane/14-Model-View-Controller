@@ -1,9 +1,7 @@
 <div class="error-container">
+  <div class="error-content">
     <h1 class="error-title">Oops! Something Went Wrong</h1>
-    <div class="error-content">
-      <p>{{error}}</p>
-      <p>Please try again later or contact support if the problem persists.</p>
-    </div>
+    <p class="error-message">{{error}}</p>
     <div class="error-actions">
       <a href="/" class="btn btn-primary">Return to Homepage</a>
       {{#if logged_in}}
@@ -11,3 +9,4 @@
       {{/if}}
     </div>
   </div>
+</div>
