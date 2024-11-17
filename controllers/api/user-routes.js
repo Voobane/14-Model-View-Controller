@@ -124,10 +124,22 @@ router.post("/login", async (req, res) => {
 router.post("/logout", (req, res) => {
   if (req.session.logged_in) {
     req.session.destroy(() => {
-      res.status(204).end();
+      // If it's an AJAX request, send JSON response
+      if (req.xhr || req.headers.accept.indexOf("json") > -1) {
+        res.json({ message: "Logged out successfully" });
+      } else {
+        // Otherwise redirect
+        res.redirect("/");
+      }
     });
   } else {
-    res.status(404).end();
+    // If it's an AJAX request, send JSON response
+    if (req.xhr || req.headers.accept.indexOf("json") > -1) {
+      res.status(404).json({ message: "No session found" });
+    } else {
+      // Otherwise redirect
+      res.redirect("/");
+    }
   }
 });
 

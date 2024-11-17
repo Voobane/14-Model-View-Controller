@@ -16,7 +16,7 @@
               <span class="post-status {{post.status}}">{{post.status}}</span>
             </div>
             <div class="post-meta">
-              Posted {{format_relative_time post.created_at}}
+              Posted on {{format_date post.createdAt}}
               {{#if post.last_edited_at}}
                 (edited {{format_relative_time post.last_edited_at}})
               {{/if}}

@@ -1,26 +1,34 @@
 <div class="single-post">
   <article class="post-card">
     <div class="post-header">
-      <h2 class="post-title">{{post.title}}</h2>
+      <h1 class="post-title">{{post.title}}</h1>
       <div class="post-meta">
-        Posted by {{format_username post.author.username}}
-        <span title="{{format_datetime post.created_at}}">
-          {{format_relative_time post.created_at}}
+        <span class="post-author">
+          Posted by {{format_username post.author.username}}
+        </span>
+        <span class="post-date" title="{{format_datetime post.createdAt}}">
+          on {{format_date post.createdAt}}
         </span>
         {{#if post.last_edited_at}}
-          (edited {{format_relative_time post.last_edited_at}})
+          <span class="post-edited" title="{{format_datetime post.last_edited_at}}">
+            (edited {{format_relative_time post.last_edited_at}})
+          </span>
         {{/if}}
       </div>
     </div>
 
     <div class="post-content">
-      <p>{{post.content}}</p>
+      {{post.content}}
     </div>
 
     <div class="post-footer">
       <div class="post-stats">
-        <span class="view-count">{{post.view_count}} views</span>
-        <span class="comment-count">
+        <span class="view-count" title="Views">
+          <i class="icon icon-eye"></i>
+          {{post.view_count}} views
+        </span>
+        <span class="comment-count" title="Comments">
+          <i class="icon icon-comment"></i>
           {{post.comments.length}} 
           {{pluralize post.comments.length "comment" "comments"}}
         </span>
@@ -53,11 +61,14 @@
         </form>
       </div>
     {{else}}
-      <p class="login-prompt">
-        <a href="/login" class="btn btn-primary">Login</a> or 
-        <a href="/signup" class="btn btn-secondary">Sign up</a> 
-        to join the discussion!
-      </p>
+      <div class="login-prompt">
+        <p>Want to join the discussion?</p>
+        <div class="auth-buttons">
+          <a href="/login" class="btn btn-primary">Login</a>
+          <span class="or-divider">or</span>
+          <a href="/signup" class="btn btn-secondary">Sign Up</a>
+        </div>
+      </div>
     {{/if}}
 
     <div class="comments-list">
@@ -67,8 +78,8 @@
           <div class="comment" id="comment-{{comment.id}}">
             <div class="comment-meta">
               <span class="comment-author">{{format_username comment.author.username}}</span>
-              <span class="comment-date" title="{{format_datetime comment.created_at}}">
-                {{format_relative_time comment.created_at}}
+              <span class="comment-date" title="{{format_datetime comment.createdAt}}">
+                {{format_relative_time comment.createdAt}}
               </span>
               {{#if comment.edited}}
                 <span class="comment-edited">(edited)</span>
@@ -90,6 +101,36 @@
       {{/if}}
     </div>
   </section>
+
+  {{#if is_owner}}
+    <div class="post-management">
+      <h3>Post Management</h3>
+      <div class="management-stats">
+        <div class="stat">
+          <span class="stat-label">Created:</span>
+          <span class="stat-value">{{format_date post.createdAt}}</span>
+        </div>
+        {{#if post.last_edited_at}}
+          <div class="stat">
+            <span class="stat-label">Last edited:</span>
+            <span class="stat-value">{{format_date post.last_edited_at}}</span>
+          </div>
+        {{/if}}
+        <div class="stat">
+          <span class="stat-label">Total views:</span>
+          <span class="stat-value">{{post.view_count}}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Comments:</span>
+          <span class="stat-value">{{post.comments.length}}</span>
+        </div>
+      </div>
+      <div class="management-actions">
+        <a href="/dashboard/edit/{{post.id}}" class="btn btn-primary">Edit Post</a>
+        <button class="btn btn-danger delete-post" data-id="{{post.id}}">Delete Post</button>
+      </div>
+    </div>
+  {{/if}}
 </div>
 
 {{#if logged_in}}

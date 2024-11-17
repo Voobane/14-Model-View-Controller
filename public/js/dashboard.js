@@ -1,18 +1,24 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const createPostBtn = document.getElementById('create-new-post');
+document.addEventListener("DOMContentLoaded", () => {
+  // Handle delete post
+  document.querySelectorAll(".delete-post").forEach((button) => {
+    button.addEventListener("click", async (event) => {
+      if (confirm("Are you sure you want to delete this post?")) {
+        const postId = event.target.getAttribute("data-id");
 
-  createPostBtn.addEventListener('click', () => {
-    window.location.href = '/dashboard/new'; // Redirect to create a new post page
-  });
+        try {
+          const response = await fetch(`/api/posts/${postId}`, {
+            method: "DELETE",
+          });
 
-  document.querySelectorAll('.delete-post').forEach(button => {
-    button.addEventListener('click', async (event) => {
-      const postId = event.target.getAttribute('data-id');
-      const response = await fetch(`/api/posts/${postId}`, { method: 'DELETE' });
-      if (response.ok) {
-        document.location.reload(); // Reload dashboard on success
-      } else {
-        alert('Failed to delete post.');
+          if (response.ok) {
+            document.location.replace("/dashboard");
+          } else {
+            alert("Failed to delete post");
+          }
+        } catch (err) {
+          console.error("Error:", err);
+          alert("Failed to delete post");
+        }
       }
     });
   });

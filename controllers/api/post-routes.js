@@ -66,7 +66,6 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST /api/posts - Create new post
-// Create new post
 router.post("/", withAuth, async (req, res) => {
   try {
     const { title, content } = req.body;
@@ -83,9 +82,21 @@ router.post("/", withAuth, async (req, res) => {
       title,
       content,
       user_id: req.session.user_id,
+      status: "published",
     });
 
-    res.status(201).json(newPost);
+    // Fetch the complete post with user information
+    const completePost = await Post.findByPk(newPost.id, {
+      include: [
+        {
+          model: User,
+          as: "author",
+          attributes: ["username"],
+        },
+      ],
+    });
+
+    res.status(201).json(completePost);
   } catch (err) {
     console.error("Error creating post:", err);
     res.status(500).json({ message: "Failed to create post" });
@@ -96,6 +107,12 @@ router.post("/", withAuth, async (req, res) => {
 router.put("/:id", withAuth, async (req, res) => {
   try {
     const { title, content, status } = req.body;
+
+    if (!title || !content) {
+      res.status(400).json({ message: "Title and content are required" });
+      return;
+    }
+
     const post = await Post.findByPk(req.params.id);
 
     if (!post) {
@@ -103,7 +120,7 @@ router.put("/:id", withAuth, async (req, res) => {
       return;
     }
 
-    if (!post.isOwner(req.session.user_id)) {
+    if (post.user_id !== req.session.user_id) {
       res.status(403).json({ message: "Not authorized to edit this post" });
       return;
     }
@@ -111,13 +128,13 @@ router.put("/:id", withAuth, async (req, res) => {
     const updatedPost = await post.update({
       title,
       content,
-      status,
+      status: status || "published",
     });
 
     res.json(updatedPost);
   } catch (err) {
     console.error("Error updating post:", err);
-    res.status(500).json(err);
+    res.status(500).json({ message: "Failed to update post" });
   }
 });
 

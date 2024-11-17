@@ -3,6 +3,7 @@ const { Comment, User } = require("../../models");
 const withAuth = require("../../utils/auth");
 
 // PUT /api/comments/:id - Update comment
+// PUT /api/comments/:id - Update comment
 router.put("/:id", withAuth, async (req, res) => {
   try {
     const { content } = req.body;
@@ -19,12 +20,15 @@ router.put("/:id", withAuth, async (req, res) => {
       return;
     }
 
-    if (!comment.isOwner(req.session.user_id)) {
+    if (comment.user_id !== req.session.user_id) {
       res.status(403).json({ message: "Not authorized to edit this comment" });
       return;
     }
 
-    const updatedComment = await comment.update({ content });
+    const updatedComment = await comment.update({
+      content,
+      edited: true,
+    });
 
     const commentWithUser = await Comment.findByPk(updatedComment.id, {
       include: [{ model: User, as: "author", attributes: ["username"] }],
@@ -33,7 +37,7 @@ router.put("/:id", withAuth, async (req, res) => {
     res.json(commentWithUser);
   } catch (err) {
     console.error("Error updating comment:", err);
-    res.status(500).json(err);
+    res.status(500).json({ message: "Failed to update comment" });
   }
 });
 

@@ -14,17 +14,19 @@ const PORT = process.env.PORT || 3001;
 const hbs = exphbs.create({
   helpers,
   defaultLayout: "main",
+  layoutsDir: path.join(__dirname, "views/layouts"),
 });
 
 // Inform Express.js on which template engine to use
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
+app.set("views", path.join(__dirname, "views"));
 
 // Session configuration
 const sess = {
   secret: "Super secret secret",
   cookie: {
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    maxAge: 180000, // 180 seconds = 3 minutes in milliseconds
     httpOnly: true,
     secure: false,
     sameSite: "strict",

@@ -29,29 +29,18 @@
   </header>
 
   <main class="container flex-grow">
-    {{#if error}}
-      <div class="alert alert-danger">
-        <p>{{error}}</p>
-      </div>
-    {{/if}}
-
-    {{#if success}}
-      <div class="alert alert-success">
-        <p>{{success}}</p>
-      </div>
-    {{/if}}
-
     {{{body}}}
   </main>
 
   <footer>
     <div class="container">
-      <p>&copy; VooBane © 2024 All Rights Reserved</p>
+      <p>&copy; 2024 Tech Blog. All rights reserved.</p>
     </div>
   </footer>
 
-  {{#if logged_in}}
+   {{#if logged_in}}
     <script src="/js/logout.js"></script>
+    <script src="/js/session-timeout.js"></script>
   {{/if}}
 </body>
 </html>

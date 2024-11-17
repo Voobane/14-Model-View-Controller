@@ -18,8 +18,8 @@
               <span class="post-author">
                 By {{format_username post.author.username}}
               </span>
-              <span class="post-date" title="{{format_datetime post.created_at}}">
-                {{format_relative_time post.created_at}}
+              <span class="post-date" title="{{format_datetime post.createdAt}}">
+                on {{format_date post.createdAt}}
               </span>
               {{#if post.last_edited_at}}
                 <span class="post-edited" title="{{format_datetime post.last_edited_at}}">
@@ -35,46 +35,27 @@
           
           <div class="post-footer">
             <div class="post-stats">
-              <span class="view-count" title="Views">
-                <i class="icon icon-eye"></i>
-                {{post.view_count}}
-              </span>
-              <span class="comment-count" title="Comments">
-                <i class="icon icon-comment"></i>
-                {{post.commentCount}} 
-                {{pluralize post.commentCount "comment" "comments"}}
+              <span class="view-count">{{post.view_count}} views</span>
+              <span class="comment-count">
+                {{post.comments.length}} 
+                {{pluralize post.comments.length "comment" "comments"}}
               </span>
             </div>
             <a href="/post/{{post.id}}" class="btn btn-primary">Read More</a>
           </div>
         </article>
       {{/each}}
-
-      {{!-- Add pagination if needed --}}
-      {{#if pagination}}
-        <div class="pagination">
-          {{#if pagination.prev}}
-            <a href="?page={{pagination.prev}}" class="btn btn-secondary">Previous</a>
-          {{/if}}
-          <span class="page-info">Page {{pagination.current}} of {{pagination.total}}</span>
-          {{#if pagination.next}}
-            <a href="?page={{pagination.next}}" class="btn btn-secondary">Next</a>
-          {{/if}}
-        </div>
-      {{/if}}
-
     {{else}}
       <div class="empty-state">
         <h2>Welcome to Tech Blog!</h2>
-        <p>Share your thoughts, knowledge, and experiences with the tech community.</p>
+        <p>No posts yet. Be the first to share your thoughts!</p>
         {{#if logged_in}}
-          <a href="/dashboard/new" class="btn btn-primary">Create the First Post</a>
+          <a href="/dashboard/new" class="btn btn-primary">Create First Post</a>
         {{else}}
           <div class="auth-buttons">
             <a href="/login" class="btn btn-primary">Login</a>
             <span class="or-divider">or</span>
             <a href="/signup" class="btn btn-secondary">Sign Up</a>
-            <p class="auth-prompt">to start posting!</p>
           </div>
         {{/if}}
       </div>
